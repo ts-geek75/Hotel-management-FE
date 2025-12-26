@@ -14,6 +14,14 @@
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-status-booked: var(--status-booked);
+  --color-status-checked-in: var(--status-checked-in);
+  --color-status-checked-out: var(--status-checked-out);
+  --color-status-cancelled: var(--status-cancelled);
+  --color-status-booked-text: var(--status-booked-text);
+  --color-status-checked-in-text: var(--status-checked-in-text);
+  --color-status-checked-out-text: var(--status-checked-out-text);
+  --color-status-cancelled-text: var(--status-cancelled-text);
   --color-sidebar: var(--sidebar);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
@@ -90,6 +98,14 @@ body {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --status-booked: rgb(219 234 254);
+  --status-booked-text: rgb(29 78 216);
+  --status-checked-in: rgb(243 232 255);
+  --status-checked-in-text: rgb(168 85 247);
+  --status-checked-out: rgb(243 244 246);
+  --status-checked-out-text: rgb(107 114 128);
+  --status-cancelled: rgb(254 226 226);
+  --status-cancelled-text: rgb(220 38 38);
 }
 
 .dark {
@@ -124,6 +140,14 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --status-booked: rgb(30 58 138);
+  --status-booked-text: rgb(147 197 253);
+  --status-checked-in: rgb(88 28 135);
+  --status-checked-in-text: rgb(196 181 253);
+  --status-checked-out: rgb(55 65 81);
+  --status-checked-out-text: rgb(209 213 219);
+  --status-cancelled: rgb(127 29 29);
+  --status-cancelled-text: rgb(254 128 128);
 }
 
 @layer base {

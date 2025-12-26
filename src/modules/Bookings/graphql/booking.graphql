@@ -1,0 +1,20 @@
+query booking {
+  allBookings {
+    nodes {
+      checkInDate
+      checkOutDate
+      createdAt
+      status
+      roomId
+      userId
+      updatedAt
+      roomByRoomId {
+        id
+        roomNumber
+      }
+      userByUserId {
+        name
+      }
+    }
+  }
+}

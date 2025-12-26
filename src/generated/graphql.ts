@@ -1104,6 +1104,11 @@ export enum UsersOrderBy {
   RoleDesc = 'ROLE_DESC'
 }
 
+export type BookingQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BookingQuery = { __typename?: 'Query', allBookings?: { __typename?: 'BookingsConnection', nodes: Array<{ __typename?: 'Booking', checkInDate: any, checkOutDate: any, createdAt: any, status: BookingStatus, roomId: any, userId: any, updatedAt: any, roomByRoomId?: { __typename?: 'Room', id: any, roomNumber: number } | null, userByUserId?: { __typename?: 'User', name: string } | null } | null> } | null };
+
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1122,6 +1127,63 @@ export type RegisterUserMutationVariables = Exact<{
 export type RegisterUserMutation = { __typename?: 'Mutation', registerUser?: { __typename?: 'User', id: any, name: string, email: string } | null };
 
 
+export const BookingDocument = gql`
+    query booking {
+  allBookings {
+    nodes {
+      checkInDate
+      checkOutDate
+      createdAt
+      status
+      roomId
+      userId
+      updatedAt
+      roomByRoomId {
+        id
+        roomNumber
+      }
+      userByUserId {
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useBookingQuery__
+ *
+ * To run a query within a React component, call `useBookingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBookingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBookingQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBookingQuery(baseOptions?: Apollo.QueryHookOptions<BookingQuery, BookingQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BookingQuery, BookingQueryVariables>(BookingDocument, options);
+      }
+export function useBookingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BookingQuery, BookingQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BookingQuery, BookingQueryVariables>(BookingDocument, options);
+        }
+// @ts-ignore
+export function useBookingSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<BookingQuery, BookingQueryVariables>): Apollo.UseSuspenseQueryResult<BookingQuery, BookingQueryVariables>;
+export function useBookingSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<BookingQuery, BookingQueryVariables>): Apollo.UseSuspenseQueryResult<BookingQuery | undefined, BookingQueryVariables>;
+export function useBookingSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<BookingQuery, BookingQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<BookingQuery, BookingQueryVariables>(BookingDocument, options);
+        }
+export type BookingQueryHookResult = ReturnType<typeof useBookingQuery>;
+export type BookingLazyQueryHookResult = ReturnType<typeof useBookingLazyQuery>;
+export type BookingSuspenseQueryHookResult = ReturnType<typeof useBookingSuspenseQuery>;
+export type BookingQueryResult = Apollo.QueryResult<BookingQuery, BookingQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   loginUser(email: $email, password: $password)

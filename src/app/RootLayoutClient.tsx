@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ApolloProvider } from "@apollo/client/react";
 import { client } from "@/lib/client";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
@@ -12,10 +12,27 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   
   const isAuthPage = pathname === "/login" || pathname === "/register";
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated && isAuthPage) {
+    router.push("/");
+    return null;
+  }
+
+  if (!isAuthenticated && !isAuthPage) {
+    router.push("/login");
+    return null;
+  }
 
   return (
     <>

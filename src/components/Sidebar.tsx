@@ -19,7 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     { name: "Dashboard", icon: <Home size={20} />, href: "/" },
     { name: "Rooms", icon: <Home size={20} />, href: "/rooms" },
     { name: "Guests", icon: <Users size={20} />, href: "/guests" },
-    { name: "Bookings", icon: <Calendar size={20} />, href: "/bookings" },
+    { name: "Bookings", icon: <Calendar size={20} />, href: "/admin/bookings" },
   ];
 
   return (

@@ -6,6 +6,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   setAuthenticated: (value: boolean) => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,11 +35,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const setAuthenticated = useCallback((value: boolean) => {
     setIsAuthenticated(value);
+    if (value) {
+      // Token is set when logging in (you set it in localStorage in your login logic)
+      // Also set it in a cookie for middleware access
+      document.cookie = `auth-token=${localStorage.getItem("token")}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
+    }
+    window.dispatchEvent(new Event("authChange"));
+  }, []);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    document.cookie = "auth-token=; path=/; max-age=0";
+    setIsAuthenticated(false);
     window.dispatchEvent(new Event("authChange"));
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, loading, setAuthenticated }}>
+    <AuthContext.Provider value={{ isAuthenticated, loading, setAuthenticated, logout }}>
       {children}
     </AuthContext.Provider>
   );
