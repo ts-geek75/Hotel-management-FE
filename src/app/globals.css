@@ -22,7 +22,7 @@
   --color-status-checked-in-text: var(--status-checked-in-text);
   --color-status-checked-out-text: var(--status-checked-out-text);
   --color-status-cancelled-text: var(--status-cancelled-text);
-  --color-primary-green: var(--color-primary-green)
+  --color-primary-green: var(--primary-green);
   --color-sidebar: var(--sidebar);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
@@ -76,7 +76,7 @@ body {
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --primary-green:#1E9484;
+  --primary-green: #1E9484;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);

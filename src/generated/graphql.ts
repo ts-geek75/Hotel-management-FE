@@ -1126,6 +1126,11 @@ export type BookingQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type BookingQuery = { __typename?: 'Query', allBookings?: { __typename?: 'BookingsConnection', nodes: Array<{ __typename?: 'Booking', checkInDate: any, checkOutDate: any, createdAt: any, status: BookingStatus, roomId: any, userId: any, updatedAt: any, roomByRoomId?: { __typename?: 'Room', id: any, roomNumber: number } | null, userByUserId?: { __typename?: 'User', name: string } | null } | null> } | null };
 
+export type DashboardStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DashboardStatsQuery = { __typename?: 'Query', totalRooms?: { __typename?: 'RoomsConnection', totalCount: number } | null, availableRooms?: { __typename?: 'RoomsConnection', totalCount: number } | null, bookedBookings?: { __typename?: 'BookingsConnection', totalCount: number } | null, checkedInBookings?: { __typename?: 'BookingsConnection', totalCount: number } | null };
+
 export type CreateRoomMutationVariables = Exact<{
   input: CreateRoomInput;
 }>;
@@ -1280,6 +1285,57 @@ export type BookingQueryHookResult = ReturnType<typeof useBookingQuery>;
 export type BookingLazyQueryHookResult = ReturnType<typeof useBookingLazyQuery>;
 export type BookingSuspenseQueryHookResult = ReturnType<typeof useBookingSuspenseQuery>;
 export type BookingQueryResult = Apollo.QueryResult<BookingQuery, BookingQueryVariables>;
+export const DashboardStatsDocument = gql`
+    query DashboardStats {
+  totalRooms: allRooms {
+    totalCount
+  }
+  availableRooms: allRooms(condition: {status: AVAILABLE}) {
+    totalCount
+  }
+  bookedBookings: allBookings(condition: {status: BOOKED}) {
+    totalCount
+  }
+  checkedInBookings: allBookings(condition: {status: CHECKED_IN}) {
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useDashboardStatsQuery__
+ *
+ * To run a query within a React component, call `useDashboardStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDashboardStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDashboardStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDashboardStatsQuery(baseOptions?: Apollo.QueryHookOptions<DashboardStatsQuery, DashboardStatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DashboardStatsQuery, DashboardStatsQueryVariables>(DashboardStatsDocument, options);
+      }
+export function useDashboardStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DashboardStatsQuery, DashboardStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DashboardStatsQuery, DashboardStatsQueryVariables>(DashboardStatsDocument, options);
+        }
+// @ts-ignore
+export function useDashboardStatsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DashboardStatsQuery, DashboardStatsQueryVariables>): Apollo.UseSuspenseQueryResult<DashboardStatsQuery, DashboardStatsQueryVariables>;
+export function useDashboardStatsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<DashboardStatsQuery, DashboardStatsQueryVariables>): Apollo.UseSuspenseQueryResult<DashboardStatsQuery | undefined, DashboardStatsQueryVariables>;
+export function useDashboardStatsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<DashboardStatsQuery, DashboardStatsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DashboardStatsQuery, DashboardStatsQueryVariables>(DashboardStatsDocument, options);
+        }
+export type DashboardStatsQueryHookResult = ReturnType<typeof useDashboardStatsQuery>;
+export type DashboardStatsLazyQueryHookResult = ReturnType<typeof useDashboardStatsLazyQuery>;
+export type DashboardStatsSuspenseQueryHookResult = ReturnType<typeof useDashboardStatsSuspenseQuery>;
+export type DashboardStatsQueryResult = Apollo.QueryResult<DashboardStatsQuery, DashboardStatsQueryVariables>;
 export const CreateRoomDocument = gql`
     mutation CreateRoom($input: CreateRoomInput!) {
   createRoom(input: $input) {

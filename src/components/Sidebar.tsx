@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const links = [
     { name: "Dashboard", icon: <Home size={20} />, href: "/" },
     { name: "Rooms", icon: <Home size={20} />, href: "/admin/rooms" },
-    { name: "Guests", icon: <Users size={20} />, href: "/guests" },
+    { name: "Guests", icon: <Users size={20} />, href: "/admin/guests" },
     { name: "Bookings", icon: <Calendar size={20} />, href: "/admin/bookings" },
   ];
 

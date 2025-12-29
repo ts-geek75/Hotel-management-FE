@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-
+import { useRouter } from "next/navigation";
 import { ArrowRight, BedDouble, CalendarCheck, Users } from "lucide-react";
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useDashboardStats } from "./hooks/useDashboardStats";
 
 type StatItem = {
   title: string;
@@ -15,53 +15,59 @@ type StatItem = {
 type ActionItem = {
   title: string;
   description: string;
+  href: string;
 };
-
-const stats: StatItem[] = [
-  {
-    title: "Total Rooms",
-    value: 8,
-    icon: <BedDouble className="h-6 w-6 text-indigo-300" />,
-  },
-  {
-    title: "Available Rooms",
-    value: 4,
-    icon: <BedDouble className="h-6 w-6 text-green-300" />,
-  },
-  {
-    title: "Active Bookings",
-    value: 3,
-    icon: <CalendarCheck className="h-6 w-6 text-purple-300" />,
-  },
-  {
-    title: "Checked-in Guests",
-    value: 2,
-    icon: <Users className="h-6 w-6 text-orange-300" />,
-  },
-];
 
 const actions: ActionItem[] = [
   {
     title: "Manage Rooms",
     description: "View and edit room details",
+    href: "/admin/rooms",
   },
   {
     title: "View Guests",
     description: "Guest information & history",
+    href: "/admin/guests",
   },
   {
     title: "Manage Bookings",
     description: "Create and update bookings",
+    href: "/admin/bookings",
   },
 ];
 
-const Dashboard: React.FC = () => {
+const DashboardSummary: React.FC = () => {
+  const router = useRouter();
+  const {totalRooms , availableRooms ,  bookedBookings ,  checkedInBookings} = useDashboardStats();
+  const stats: StatItem[] = [
+    {
+      title: "Total Rooms",
+      value: totalRooms,
+      icon: <BedDouble className="h-8 w-8 text-indigo-200" />,
+    },
+    {
+      title: "Available Rooms",
+      value: availableRooms,
+      icon: <BedDouble className="h-8 w-8 text-green-200" />,
+    },
+    {
+      title: "Active Bookings",
+      value: bookedBookings,
+      icon: <CalendarCheck className="h-8 w-8 text-purple-200" />,
+    },
+    {
+      title: "Checked-in Guests",
+      value: checkedInBookings,
+      icon: <Users className="h-8 w-8 text-orange-200" />,
+    },
+  ];
+
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((item) => (
           <Card key={item.title}>
-            <CardHeader className="flex flex-row items-center justify-between ">
+            <CardHeader className="flex flex-row items-center justify-between">
               <span className="text-sm font-medium text-muted-foreground">
                 {item.title}
               </span>
@@ -78,11 +84,14 @@ const Dashboard: React.FC = () => {
         {actions.map((action) => (
           <Card
             key={action.title}
-            className="cursor-pointer transition hover:shadow-md hover:bg-green-50"
+            role="button"
+            tabIndex={0}
+            onClick={() => router.push(action.href)}
+            className="cursor-pointer transition hover:bg-green-50 hover:shadow-md"
           >
             <CardContent className="flex items-center justify-between">
               <div className="space-y-1">
-                <p className="text-sm font-semibold">{action.title}</p>
+                <p className="text-sm font-medium">{action.title}</p>
                 <p className="text-sm text-muted-foreground">
                   {action.description}
                 </p>
@@ -96,4 +105,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardSummary;

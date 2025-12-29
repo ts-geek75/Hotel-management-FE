@@ -1,0 +1,14 @@
+query DashboardStats {
+  totalRooms: allRooms {
+    totalCount
+  }
+  availableRooms: allRooms(condition: {status: AVAILABLE}) {
+    totalCount
+  }
+  bookedBookings: allBookings(condition: {status: BOOKED}) {
+    totalCount
+  }
+  checkedInBookings: allBookings(condition: {status: CHECKED_IN}) {
+    totalCount
+  }
+}
