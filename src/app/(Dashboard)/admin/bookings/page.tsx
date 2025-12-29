@@ -1,4 +1,4 @@
-import BookingPanel from '@/modules/Bookings/BookingPanel';
+import BookingPanel from '@/modules/bookings/BookingPanel';
 
 const Bookingpage = () => {
   return <BookingPanel/>

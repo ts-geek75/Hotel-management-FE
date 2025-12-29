@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import AdminDashboard from "@/modules/admin/AdminDashboard";
+import AdminDashboard from "@/modules/dashboard/AdminDashboard";
 import UserDashboard from "@/modules/user/UserDashboard";
 
 const HomePage = () => {

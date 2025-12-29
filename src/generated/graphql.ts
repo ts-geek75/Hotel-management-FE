@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client/react';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1104,11 +1104,6 @@ export enum UsersOrderBy {
   RoleDesc = 'ROLE_DESC'
 }
 
-export type BookingQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type BookingQuery = { __typename?: 'Query', allBookings?: { __typename?: 'BookingsConnection', nodes: Array<{ __typename?: 'Booking', checkInDate: any, checkOutDate: any, createdAt: any, status: BookingStatus, roomId: any, userId: any, updatedAt: any, roomByRoomId?: { __typename?: 'Room', id: any, roomNumber: number } | null, userByUserId?: { __typename?: 'User', name: string } | null } | null> } | null };
-
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1126,64 +1121,39 @@ export type RegisterUserMutationVariables = Exact<{
 
 export type RegisterUserMutation = { __typename?: 'Mutation', registerUser?: { __typename?: 'User', id: any, name: string, email: string } | null };
 
+export type BookingQueryVariables = Exact<{ [key: string]: never; }>;
 
-export const BookingDocument = gql`
-    query booking {
-  allBookings {
-    nodes {
-      checkInDate
-      checkOutDate
-      createdAt
-      status
-      roomId
-      userId
-      updatedAt
-      roomByRoomId {
-        id
-        roomNumber
-      }
-      userByUserId {
-        name
-      }
-    }
-  }
-}
-    `;
 
-/**
- * __useBookingQuery__
- *
- * To run a query within a React component, call `useBookingQuery` and pass it any options that fit your needs.
- * When your component renders, `useBookingQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useBookingQuery({
- *   variables: {
- *   },
- * });
- */
-export function useBookingQuery(baseOptions?: Apollo.QueryHookOptions<BookingQuery, BookingQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<BookingQuery, BookingQueryVariables>(BookingDocument, options);
-      }
-export function useBookingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BookingQuery, BookingQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<BookingQuery, BookingQueryVariables>(BookingDocument, options);
-        }
-// @ts-ignore
-export function useBookingSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<BookingQuery, BookingQueryVariables>): Apollo.UseSuspenseQueryResult<BookingQuery, BookingQueryVariables>;
-export function useBookingSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<BookingQuery, BookingQueryVariables>): Apollo.UseSuspenseQueryResult<BookingQuery | undefined, BookingQueryVariables>;
-export function useBookingSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<BookingQuery, BookingQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<BookingQuery, BookingQueryVariables>(BookingDocument, options);
-        }
-export type BookingQueryHookResult = ReturnType<typeof useBookingQuery>;
-export type BookingLazyQueryHookResult = ReturnType<typeof useBookingLazyQuery>;
-export type BookingSuspenseQueryHookResult = ReturnType<typeof useBookingSuspenseQuery>;
-export type BookingQueryResult = Apollo.QueryResult<BookingQuery, BookingQueryVariables>;
+export type BookingQuery = { __typename?: 'Query', allBookings?: { __typename?: 'BookingsConnection', nodes: Array<{ __typename?: 'Booking', checkInDate: any, checkOutDate: any, createdAt: any, status: BookingStatus, roomId: any, userId: any, updatedAt: any, roomByRoomId?: { __typename?: 'Room', id: any, roomNumber: number } | null, userByUserId?: { __typename?: 'User', name: string } | null } | null> } | null };
+
+export type CreateRoomMutationVariables = Exact<{
+  input: CreateRoomInput;
+}>;
+
+
+export type CreateRoomMutation = { __typename?: 'Mutation', createRoom?: { __typename?: 'CreateRoomPayload', room?: { __typename?: 'Room', id: any, roomNumber: number, pricePerNight: any, status: RoomStatus, type: RoomType } | null } | null };
+
+export type DeleteRoomMutationVariables = Exact<{
+  id: Scalars['UUID'];
+}>;
+
+
+export type DeleteRoomMutation = { __typename?: 'Mutation', deleteRoomById?: { __typename?: 'DeleteRoomPayload', clientMutationId?: string | null, deletedRoomId?: string | null } | null };
+
+export type UpdateRoomMutationVariables = Exact<{
+  roomNumber: Scalars['Int'];
+  roomPatch: RoomPatch;
+}>;
+
+
+export type UpdateRoomMutation = { __typename?: 'Mutation', updateRoomByRoomNumber?: { __typename?: 'UpdateRoomPayload', room?: { __typename?: 'Room', id: any, roomNumber: number, status: RoomStatus, type: RoomType, pricePerNight: any, updatedAt: any } | null } | null };
+
+export type RoomsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RoomsQuery = { __typename?: 'Query', allRooms?: { __typename?: 'RoomsConnection', nodes: Array<{ __typename?: 'Room', pricePerNight: any, roomNumber: number, status: RoomStatus, type: RoomType, id: any, updatedAt: any, createdAt: any } | null> } | null };
+
+
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   loginUser(email: $email, password: $password)
@@ -1253,3 +1223,224 @@ export function useRegisterUserMutation(baseOptions?: Apollo.MutationHookOptions
 export type RegisterUserMutationHookResult = ReturnType<typeof useRegisterUserMutation>;
 export type RegisterUserMutationResult = Apollo.MutationResult<RegisterUserMutation>;
 export type RegisterUserMutationOptions = Apollo.BaseMutationOptions<RegisterUserMutation, RegisterUserMutationVariables>;
+export const BookingDocument = gql`
+    query booking {
+  allBookings {
+    nodes {
+      checkInDate
+      checkOutDate
+      createdAt
+      status
+      roomId
+      userId
+      updatedAt
+      roomByRoomId {
+        id
+        roomNumber
+      }
+      userByUserId {
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useBookingQuery__
+ *
+ * To run a query within a React component, call `useBookingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBookingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBookingQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBookingQuery(baseOptions?: Apollo.QueryHookOptions<BookingQuery, BookingQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BookingQuery, BookingQueryVariables>(BookingDocument, options);
+      }
+export function useBookingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BookingQuery, BookingQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BookingQuery, BookingQueryVariables>(BookingDocument, options);
+        }
+// @ts-ignore
+export function useBookingSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<BookingQuery, BookingQueryVariables>): Apollo.UseSuspenseQueryResult<BookingQuery, BookingQueryVariables>;
+export function useBookingSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<BookingQuery, BookingQueryVariables>): Apollo.UseSuspenseQueryResult<BookingQuery | undefined, BookingQueryVariables>;
+export function useBookingSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<BookingQuery, BookingQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<BookingQuery, BookingQueryVariables>(BookingDocument, options);
+        }
+export type BookingQueryHookResult = ReturnType<typeof useBookingQuery>;
+export type BookingLazyQueryHookResult = ReturnType<typeof useBookingLazyQuery>;
+export type BookingSuspenseQueryHookResult = ReturnType<typeof useBookingSuspenseQuery>;
+export type BookingQueryResult = Apollo.QueryResult<BookingQuery, BookingQueryVariables>;
+export const CreateRoomDocument = gql`
+    mutation CreateRoom($input: CreateRoomInput!) {
+  createRoom(input: $input) {
+    room {
+      id
+      roomNumber
+      pricePerNight
+      status
+      type
+    }
+  }
+}
+    `;
+export type CreateRoomMutationFn = Apollo.MutationFunction<CreateRoomMutation, CreateRoomMutationVariables>;
+
+/**
+ * __useCreateRoomMutation__
+ *
+ * To run a mutation, you first call `useCreateRoomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateRoomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createRoomMutation, { data, loading, error }] = useCreateRoomMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateRoomMutation(baseOptions?: Apollo.MutationHookOptions<CreateRoomMutation, CreateRoomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateRoomMutation, CreateRoomMutationVariables>(CreateRoomDocument, options);
+      }
+export type CreateRoomMutationHookResult = ReturnType<typeof useCreateRoomMutation>;
+export type CreateRoomMutationResult = Apollo.MutationResult<CreateRoomMutation>;
+export type CreateRoomMutationOptions = Apollo.BaseMutationOptions<CreateRoomMutation, CreateRoomMutationVariables>;
+export const DeleteRoomDocument = gql`
+    mutation DeleteRoom($id: UUID!) {
+  deleteRoomById(input: {id: $id}) {
+    clientMutationId
+    deletedRoomId
+  }
+}
+    `;
+export type DeleteRoomMutationFn = Apollo.MutationFunction<DeleteRoomMutation, DeleteRoomMutationVariables>;
+
+/**
+ * __useDeleteRoomMutation__
+ *
+ * To run a mutation, you first call `useDeleteRoomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRoomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRoomMutation, { data, loading, error }] = useDeleteRoomMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteRoomMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRoomMutation, DeleteRoomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRoomMutation, DeleteRoomMutationVariables>(DeleteRoomDocument, options);
+      }
+export type DeleteRoomMutationHookResult = ReturnType<typeof useDeleteRoomMutation>;
+export type DeleteRoomMutationResult = Apollo.MutationResult<DeleteRoomMutation>;
+export type DeleteRoomMutationOptions = Apollo.BaseMutationOptions<DeleteRoomMutation, DeleteRoomMutationVariables>;
+export const UpdateRoomDocument = gql`
+    mutation UpdateRoom($roomNumber: Int!, $roomPatch: RoomPatch!) {
+  updateRoomByRoomNumber(input: {roomPatch: $roomPatch, roomNumber: $roomNumber}) {
+    room {
+      id
+      roomNumber
+      status
+      type
+      pricePerNight
+      updatedAt
+    }
+  }
+}
+    `;
+export type UpdateRoomMutationFn = Apollo.MutationFunction<UpdateRoomMutation, UpdateRoomMutationVariables>;
+
+/**
+ * __useUpdateRoomMutation__
+ *
+ * To run a mutation, you first call `useUpdateRoomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRoomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRoomMutation, { data, loading, error }] = useUpdateRoomMutation({
+ *   variables: {
+ *      roomNumber: // value for 'roomNumber'
+ *      roomPatch: // value for 'roomPatch'
+ *   },
+ * });
+ */
+export function useUpdateRoomMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRoomMutation, UpdateRoomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRoomMutation, UpdateRoomMutationVariables>(UpdateRoomDocument, options);
+      }
+export type UpdateRoomMutationHookResult = ReturnType<typeof useUpdateRoomMutation>;
+export type UpdateRoomMutationResult = Apollo.MutationResult<UpdateRoomMutation>;
+export type UpdateRoomMutationOptions = Apollo.BaseMutationOptions<UpdateRoomMutation, UpdateRoomMutationVariables>;
+export const RoomsDocument = gql`
+    query rooms {
+  allRooms {
+    nodes {
+      pricePerNight
+      roomNumber
+      status
+      type
+      id
+      updatedAt
+      createdAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useRoomsQuery__
+ *
+ * To run a query within a React component, call `useRoomsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRoomsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRoomsQuery(baseOptions?: Apollo.QueryHookOptions<RoomsQuery, RoomsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RoomsQuery, RoomsQueryVariables>(RoomsDocument, options);
+      }
+export function useRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RoomsQuery, RoomsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RoomsQuery, RoomsQueryVariables>(RoomsDocument, options);
+        }
+// @ts-ignore
+export function useRoomsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RoomsQuery, RoomsQueryVariables>): Apollo.UseSuspenseQueryResult<RoomsQuery, RoomsQueryVariables>;
+export function useRoomsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RoomsQuery, RoomsQueryVariables>): Apollo.UseSuspenseQueryResult<RoomsQuery | undefined, RoomsQueryVariables>;
+export function useRoomsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RoomsQuery, RoomsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RoomsQuery, RoomsQueryVariables>(RoomsDocument, options);
+        }
+export type RoomsQueryHookResult = ReturnType<typeof useRoomsQuery>;
+export type RoomsLazyQueryHookResult = ReturnType<typeof useRoomsLazyQuery>;
+export type RoomsSuspenseQueryHookResult = ReturnType<typeof useRoomsSuspenseQuery>;
+export type RoomsQueryResult = Apollo.QueryResult<RoomsQuery, RoomsQueryVariables>;

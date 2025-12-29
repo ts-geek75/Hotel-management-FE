@@ -1,0 +1,6 @@
+mutation DeleteRoom($id: UUID!) {
+  deleteRoomById(input: { id: $id }) {
+    clientMutationId
+    deletedRoomId
+  }
+}

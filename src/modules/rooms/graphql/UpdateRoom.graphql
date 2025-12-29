@@ -1,0 +1,17 @@
+mutation UpdateRoom($roomNumber: Int!, $roomPatch: RoomPatch!) {
+  updateRoomByRoomNumber(
+    input: {
+      roomPatch: $roomPatch
+      roomNumber: $roomNumber
+    }
+  ) {
+    room {
+      id
+      roomNumber
+      status
+      type
+      pricePerNight
+      updatedAt
+    }
+  }
+}

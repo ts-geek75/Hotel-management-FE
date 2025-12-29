@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Eye, X } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -14,6 +15,10 @@ import {
 import { useBookingQuery } from "@/generated/graphql";
 import { Loader } from "@/components";
 
+type BookingsTableProps = {
+  showActions?: boolean;
+};
+
 const statusVariantMap: Record<string, string> = {
   BOOKED: "bg-status-booked text-status-booked-text",
   CHECKED_IN: "bg-status-checked-in text-status-checked-in-text",
@@ -21,7 +26,9 @@ const statusVariantMap: Record<string, string> = {
   CANCELLED: "bg-status-cancelled text-status-cancelled-text",
 };
 
-const BookingsTable: React.FC = () => {
+const BookingsTable: React.FC<BookingsTableProps> = ({
+  showActions = true,
+}) => {
   const { data, loading } = useBookingQuery();
 
   if (loading) {
@@ -31,25 +38,31 @@ const BookingsTable: React.FC = () => {
   return (
     <div className="rounded-xl border bg-white">
       <Table>
-        <TableHeader className="bg-gray-200 ">
+        <TableHeader className="bg-gray-200">
           <TableRow>
             <TableHead className="text-muted-foreground">GUEST</TableHead>
             <TableHead className="text-muted-foreground">ROOM</TableHead>
             <TableHead className="text-muted-foreground">CHECK-IN</TableHead>
             <TableHead className="text-muted-foreground">CHECK-OUT</TableHead>
             <TableHead className="text-muted-foreground">STATUS</TableHead>
-            <TableHead className="text-right text-muted-foreground">ACTIONS</TableHead>
+            {showActions && (
+              <TableHead className="text-right text-muted-foreground">
+                ACTIONS
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
 
         <TableBody>
           {data?.allBookings?.nodes.map((booking) => (
-            <TableRow key={booking?.createdAt} className="p-20">
+            <TableRow key={booking?.createdAt}>
               <TableCell className="font-medium">
                 {booking?.userByUserId?.name}
               </TableCell>
 
-              <TableCell>{booking?.roomByRoomId?.roomNumber}</TableCell>
+              <TableCell>
+                {booking?.roomByRoomId?.roomNumber}
+              </TableCell>
 
               <TableCell>{booking?.checkInDate}</TableCell>
 
@@ -65,12 +78,14 @@ const BookingsTable: React.FC = () => {
                 </Badge>
               </TableCell>
 
-              <TableCell className="flex justify-end gap-3">
-                <Eye className="h-4 w-4 cursor-pointer text-muted-foreground" />
-                {booking?.status !== "CHECKED_OUT" && (
-                  <X className="h-4 w-4 cursor-pointer text-red-500" />
-                )}
-              </TableCell>
+              {showActions && (
+                <TableCell className="flex justify-end gap-3">
+                  <Eye className="h-4 w-4 cursor-pointer text-muted-foreground" />
+                  {booking?.status !== "CHECKED_OUT" && (
+                    <X className="h-4 w-4 cursor-pointer text-red-500" />
+                  )}
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

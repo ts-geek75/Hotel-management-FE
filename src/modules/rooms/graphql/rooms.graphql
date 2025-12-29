@@ -1,0 +1,13 @@
+query rooms {
+  allRooms {
+    nodes {
+      pricePerNight
+      roomNumber
+      status
+      type
+      id
+      updatedAt
+      createdAt
+    }
+  }
+}
