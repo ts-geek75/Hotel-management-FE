@@ -1,0 +1,12 @@
+query AllGuests {
+  allUsers(condition: {role: USER}) {
+    edges {
+      node {
+        id
+        name
+        email
+        phoneNumber
+      }
+    }
+  }
+}

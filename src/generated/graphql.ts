@@ -1013,6 +1013,7 @@ export type User = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   password: Scalars['String'];
+  phoneNumber?: Maybe<Scalars['String']>;
   role: RoleType;
 };
 
@@ -1039,6 +1040,8 @@ export type UserCondition = {
   name?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `password` field. */
   password?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `phoneNumber` field. */
+  phoneNumber?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `role` field. */
   role?: InputMaybe<RoleType>;
 };
@@ -1050,6 +1053,7 @@ export type UserInput = {
   id?: InputMaybe<Scalars['UUID']>;
   name: Scalars['String'];
   password: Scalars['String'];
+  phoneNumber?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<RoleType>;
 };
 
@@ -1060,6 +1064,7 @@ export type UserPatch = {
   id?: InputMaybe<Scalars['UUID']>;
   name?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
+  phoneNumber?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<RoleType>;
 };
 
@@ -1098,6 +1103,8 @@ export enum UsersOrderBy {
   Natural = 'NATURAL',
   PasswordAsc = 'PASSWORD_ASC',
   PasswordDesc = 'PASSWORD_DESC',
+  PhoneNumberAsc = 'PHONE_NUMBER_ASC',
+  PhoneNumberDesc = 'PHONE_NUMBER_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RoleAsc = 'ROLE_ASC',
@@ -1124,12 +1131,17 @@ export type RegisterUserMutation = { __typename?: 'Mutation', registerUser?: { _
 export type BookingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type BookingQuery = { __typename?: 'Query', allBookings?: { __typename?: 'BookingsConnection', nodes: Array<{ __typename?: 'Booking', checkInDate: any, checkOutDate: any, createdAt: any, status: BookingStatus, roomId: any, userId: any, updatedAt: any, roomByRoomId?: { __typename?: 'Room', id: any, roomNumber: number } | null, userByUserId?: { __typename?: 'User', name: string } | null } | null> } | null };
+export type BookingQuery = { __typename?: 'Query', allBookings?: { __typename?: 'BookingsConnection', nodes: Array<{ __typename?: 'Booking', checkInDate: any, checkOutDate: any, createdAt: any, status: BookingStatus, roomId: any, userId: any, updatedAt: any, roomByRoomId?: { __typename?: 'Room', id: any, roomNumber: number } | null, userByUserId?: { __typename?: 'User', name: string, id: any } | null } | null> } | null };
 
 export type DashboardStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type DashboardStatsQuery = { __typename?: 'Query', totalRooms?: { __typename?: 'RoomsConnection', totalCount: number } | null, availableRooms?: { __typename?: 'RoomsConnection', totalCount: number } | null, bookedBookings?: { __typename?: 'BookingsConnection', totalCount: number } | null, checkedInBookings?: { __typename?: 'BookingsConnection', totalCount: number } | null };
+
+export type AllGuestsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllGuestsQuery = { __typename?: 'Query', allUsers?: { __typename?: 'UsersConnection', edges: Array<{ __typename?: 'UsersEdge', node?: { __typename?: 'User', id: any, name: string, email: string, phoneNumber?: string | null } | null }> } | null };
 
 export type CreateRoomMutationVariables = Exact<{
   input: CreateRoomInput;
@@ -1245,6 +1257,7 @@ export const BookingDocument = gql`
       }
       userByUserId {
         name
+        id
       }
     }
   }
@@ -1336,6 +1349,55 @@ export type DashboardStatsQueryHookResult = ReturnType<typeof useDashboardStatsQ
 export type DashboardStatsLazyQueryHookResult = ReturnType<typeof useDashboardStatsLazyQuery>;
 export type DashboardStatsSuspenseQueryHookResult = ReturnType<typeof useDashboardStatsSuspenseQuery>;
 export type DashboardStatsQueryResult = Apollo.QueryResult<DashboardStatsQuery, DashboardStatsQueryVariables>;
+export const AllGuestsDocument = gql`
+    query AllGuests {
+  allUsers(condition: {role: USER}) {
+    edges {
+      node {
+        id
+        name
+        email
+        phoneNumber
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllGuestsQuery__
+ *
+ * To run a query within a React component, call `useAllGuestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllGuestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllGuestsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllGuestsQuery(baseOptions?: Apollo.QueryHookOptions<AllGuestsQuery, AllGuestsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllGuestsQuery, AllGuestsQueryVariables>(AllGuestsDocument, options);
+      }
+export function useAllGuestsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllGuestsQuery, AllGuestsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllGuestsQuery, AllGuestsQueryVariables>(AllGuestsDocument, options);
+        }
+// @ts-ignore
+export function useAllGuestsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<AllGuestsQuery, AllGuestsQueryVariables>): Apollo.UseSuspenseQueryResult<AllGuestsQuery, AllGuestsQueryVariables>;
+export function useAllGuestsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AllGuestsQuery, AllGuestsQueryVariables>): Apollo.UseSuspenseQueryResult<AllGuestsQuery | undefined, AllGuestsQueryVariables>;
+export function useAllGuestsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AllGuestsQuery, AllGuestsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<AllGuestsQuery, AllGuestsQueryVariables>(AllGuestsDocument, options);
+        }
+export type AllGuestsQueryHookResult = ReturnType<typeof useAllGuestsQuery>;
+export type AllGuestsLazyQueryHookResult = ReturnType<typeof useAllGuestsLazyQuery>;
+export type AllGuestsSuspenseQueryHookResult = ReturnType<typeof useAllGuestsSuspenseQuery>;
+export type AllGuestsQueryResult = Apollo.QueryResult<AllGuestsQuery, AllGuestsQueryVariables>;
 export const CreateRoomDocument = gql`
     mutation CreateRoom($input: CreateRoomInput!) {
   createRoom(input: $input) {

@@ -38,14 +38,14 @@ const RoomsTable: React.FC<roomsTableProps> = ({ showActions = true }) => {
   };
 
   return (
-    <div className="rounded-xl border bg-white">
+    <div className="rounded-xl border bg-white overflow-hidden">
       <Table>
         <TableHeader className="bg-gray-200">
           <TableRow>
-            <TableHead className="text-muted-foreground">ROOM NO</TableHead>
-            <TableHead className="text-muted-foreground">TYPE</TableHead>
-            <TableHead className="text-muted-foreground">PRICE/NIGHT</TableHead>
-            <TableHead className="text-muted-foreground">STATUS</TableHead>
+            <TableHead>ROOM NO</TableHead>
+            <TableHead>TYPE</TableHead>
+            <TableHead>PRICE/NIGHT</TableHead>
+            <TableHead>STATUS</TableHead>
             {showActions && (
               <TableHead className="text-right text-muted-foreground">
                 ACTIONS
