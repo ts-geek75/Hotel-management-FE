@@ -1131,7 +1131,22 @@ export type RegisterUserMutation = { __typename?: 'Mutation', registerUser?: { _
 export type BookingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type BookingQuery = { __typename?: 'Query', allBookings?: { __typename?: 'BookingsConnection', nodes: Array<{ __typename?: 'Booking', checkInDate: any, checkOutDate: any, createdAt: any, status: BookingStatus, roomId: any, userId: any, updatedAt: any, roomByRoomId?: { __typename?: 'Room', id: any, roomNumber: number } | null, userByUserId?: { __typename?: 'User', name: string, id: any } | null } | null> } | null };
+export type BookingQuery = { __typename?: 'Query', allBookings?: { __typename?: 'BookingsConnection', nodes: Array<{ __typename?: 'Booking', checkOutDate: any, createdAt: any, status: BookingStatus, roomId: any, userId: any, checkInDate: any, id: any, updatedAt: any, roomByRoomId?: { __typename?: 'Room', id: any, roomNumber: number } | null, userByUserId?: { __typename?: 'User', name: string, id: any } | null } | null> } | null };
+
+export type CancelBookingMutationVariables = Exact<{
+  id: Scalars['UUID'];
+}>;
+
+
+export type CancelBookingMutation = { __typename?: 'Mutation', updateBookingById?: { __typename?: 'UpdateBookingPayload', booking?: { __typename?: 'Booking', id: any, status: BookingStatus } | null } | null };
+
+export type UpdateBookingStatusMutationVariables = Exact<{
+  id: Scalars['UUID'];
+  status: BookingStatus;
+}>;
+
+
+export type UpdateBookingStatusMutation = { __typename?: 'Mutation', updateBookingById?: { __typename?: 'UpdateBookingPayload', booking?: { __typename?: 'Booking', id: any, status: BookingStatus } | null } | null };
 
 export type DashboardStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1244,12 +1259,13 @@ export const BookingDocument = gql`
     query booking {
   allBookings {
     nodes {
-      checkInDate
       checkOutDate
       createdAt
       status
       roomId
       userId
+      checkInDate
+      id
       updatedAt
       roomByRoomId {
         id
@@ -1298,6 +1314,79 @@ export type BookingQueryHookResult = ReturnType<typeof useBookingQuery>;
 export type BookingLazyQueryHookResult = ReturnType<typeof useBookingLazyQuery>;
 export type BookingSuspenseQueryHookResult = ReturnType<typeof useBookingSuspenseQuery>;
 export type BookingQueryResult = Apollo.QueryResult<BookingQuery, BookingQueryVariables>;
+export const CancelBookingDocument = gql`
+    mutation CancelBooking($id: UUID!) {
+  updateBookingById(input: {id: $id, bookingPatch: {status: CANCELLED}}) {
+    booking {
+      id
+      status
+    }
+  }
+}
+    `;
+export type CancelBookingMutationFn = Apollo.MutationFunction<CancelBookingMutation, CancelBookingMutationVariables>;
+
+/**
+ * __useCancelBookingMutation__
+ *
+ * To run a mutation, you first call `useCancelBookingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelBookingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelBookingMutation, { data, loading, error }] = useCancelBookingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCancelBookingMutation(baseOptions?: Apollo.MutationHookOptions<CancelBookingMutation, CancelBookingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CancelBookingMutation, CancelBookingMutationVariables>(CancelBookingDocument, options);
+      }
+export type CancelBookingMutationHookResult = ReturnType<typeof useCancelBookingMutation>;
+export type CancelBookingMutationResult = Apollo.MutationResult<CancelBookingMutation>;
+export type CancelBookingMutationOptions = Apollo.BaseMutationOptions<CancelBookingMutation, CancelBookingMutationVariables>;
+export const UpdateBookingStatusDocument = gql`
+    mutation UpdateBookingStatus($id: UUID!, $status: BookingStatus!) {
+  updateBookingById(input: {id: $id, bookingPatch: {status: $status}}) {
+    booking {
+      id
+      status
+    }
+  }
+}
+    `;
+export type UpdateBookingStatusMutationFn = Apollo.MutationFunction<UpdateBookingStatusMutation, UpdateBookingStatusMutationVariables>;
+
+/**
+ * __useUpdateBookingStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateBookingStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBookingStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBookingStatusMutation, { data, loading, error }] = useUpdateBookingStatusMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateBookingStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBookingStatusMutation, UpdateBookingStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBookingStatusMutation, UpdateBookingStatusMutationVariables>(UpdateBookingStatusDocument, options);
+      }
+export type UpdateBookingStatusMutationHookResult = ReturnType<typeof useUpdateBookingStatusMutation>;
+export type UpdateBookingStatusMutationResult = Apollo.MutationResult<UpdateBookingStatusMutation>;
+export type UpdateBookingStatusMutationOptions = Apollo.BaseMutationOptions<UpdateBookingStatusMutation, UpdateBookingStatusMutationVariables>;
 export const DashboardStatsDocument = gql`
     query DashboardStats {
   totalRooms: allRooms {

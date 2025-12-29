@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Eye, X } from "lucide-react";
-
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -12,88 +11,145 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useBookingQuery } from "@/generated/graphql";
+import { Button } from "@/components/ui/button";
 import { Loader } from "@/components";
+import { BookingStatus, useBookingQuery } from "@/generated/graphql";
+import EditBookingDialog from "./components/EditBookingDialog";
+import { useBookings } from "./hooks/useBookings";
 
-type BookingsTableProps = {
-  showActions?: boolean;
-  showName?: boolean;
-  guestId?: string;
-};
-
-const statusVariantMap: Record<string, string> = {
+const statusVariantMap: Record<BookingStatus, string> = {
   BOOKED: "bg-status-booked text-status-booked-text",
   CHECKED_IN: "bg-status-checked-in text-status-checked-in-text",
   CHECKED_OUT: "bg-status-checked-out text-status-checked-out-text",
   CANCELLED: "bg-status-cancelled text-status-cancelled-text",
 };
 
+interface BookingsTableProps {
+  hideActions?: boolean;
+  hideGuest?: boolean;
+  guestId?: string;
+}
+
 const BookingsTable: React.FC<BookingsTableProps> = ({
-  showActions = true,
-  showName = true,
+  hideActions = false,
+  hideGuest = false,
   guestId,
 }) => {
   const { data, loading } = useBookingQuery();
+  const { handleCancelBooking } = useBookings(); // updated
 
-  if (loading) {
-    return <Loader />;
+  const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
+  const [bookingToDelete, setBookingToDelete] = useState<any | null>(null);
+
+  if (loading) return <Loader />;
+
+  let bookings = data?.allBookings?.nodes ?? [];
+
+  if (guestId) {
+    bookings = bookings.filter((b) => b?.userByUserId?.id === guestId);
   }
-  const filteredBookings = (data?.allBookings?.nodes || [])
-    .filter((booking): booking is NonNullable<typeof booking> => !!booking) 
-    .filter((booking) =>
-      guestId ? booking.userByUserId?.id === guestId : true
-    );
+
+  const handleConfirmCancel = () => {
+    if (bookingToDelete) {
+      handleCancelBooking(bookingToDelete.id);
+      setBookingToDelete(null);
+    }
+  };
+
   return (
-    <div className="rounded-xl border bg-white overflow-hidden">
-      <Table>
-        <TableHeader className="bg-gray-200">
-          <TableRow>
-            {showName && <TableHead>GUEST</TableHead>}
-            <TableHead>ROOM</TableHead>
-            <TableHead>CHECK-IN</TableHead>
-            <TableHead>CHECK-OUT</TableHead>
-            <TableHead>STATUS</TableHead>
-            {showActions && (
-              <TableHead className="text-right text-muted-foreground">
-                ACTIONS
-              </TableHead>
-            )}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredBookings.map((booking) => (
-            <TableRow key={booking.createdAt}>
-              {" "}
-              {showName && (
-                <TableCell className="font-medium">
-                  {booking.userByUserId?.name}
-                </TableCell>
-              )}
-              <TableCell>{booking.roomByRoomId?.roomNumber}</TableCell>
-              <TableCell>{booking.checkInDate}</TableCell>
-              <TableCell>{booking.checkOutDate}</TableCell>
-              <TableCell>
-                <Badge
-                  className={`rounded-full px-3 py-1 text-[11px] font-medium ${
-                    statusVariantMap[booking.status] || ""
-                  }`}
-                >
-                  {booking.status.replace("_", " ")}
-                </Badge>
-              </TableCell>
-              {showActions && (
-                <TableCell className="flex justify-end gap-3">
-                  <Eye className="h-4 w-4 cursor-pointer text-muted-foreground" />
-                  {booking.status !== "CHECKED_OUT" && (
-                    <X className="h-4 w-4 cursor-pointer text-red-500" />
-                  )}
-                </TableCell>
+    <>
+      <div className="rounded-xl border bg-white overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {!hideGuest && <TableHead>Guest</TableHead>}
+              <TableHead>Room</TableHead>
+              <TableHead>Check-In</TableHead>
+              <TableHead>Check-Out</TableHead>
+              <TableHead>Status</TableHead>
+              {!hideActions && (
+                <TableHead className="text-right">Actions</TableHead>
               )}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {bookings.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={hideGuest ? 5 : 6}
+                  className="py-10 text-center text-muted-foreground"
+                >
+                  No bookings found
+                </TableCell>
+              </TableRow>
+            ) : (
+              bookings.map((b) => (
+                <TableRow key={b?.id}>
+                  {!hideGuest && <TableCell>{b?.userByUserId?.name}</TableCell>}
+                  <TableCell>{b?.roomByRoomId?.roomNumber}</TableCell>
+                  <TableCell>{b?.checkInDate}</TableCell>
+                  <TableCell>{b?.checkOutDate}</TableCell>
+                  <TableCell>
+                    <Badge className={statusVariantMap[b.status]}>
+                      {b.status.replace("_", " ")}
+                    </Badge>
+                  </TableCell>
+                  {!hideActions && (
+                    <TableCell className="flex justify-end gap-3">
+                      <Eye
+                        className="h-4 w-4 cursor-pointer"
+                        onClick={() =>
+                          setSelectedBooking({
+                            id: b?.id,
+                            guestName: b?.userByUserId?.name,
+                            roomNumber: b?.roomByRoomId?.roomNumber,
+                            checkIn: b?.checkInDate,
+                            checkOut: b?.checkOutDate,
+                            status: b?.status,
+                          })
+                        }
+                      />
+                      <X
+                        className="h-4 w-4 cursor-pointer text-red-500"
+                        onClick={() => setBookingToDelete(b)}
+                      />
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {bookingToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-lg p-6 w-96">
+            <h3 className="text-lg font-semibold mb-4">Cancel Booking</h3>
+            <p className="mb-6 text-muted-foreground">
+              Are you sure you want to cancel this booking?
+            </p>
+            <div className="flex justify-end gap-4">
+              <Button
+                variant="outline"
+                onClick={() => setBookingToDelete(null)}
+              >
+                Keep Booking
+              </Button>
+              <Button variant="destructive" onClick={handleConfirmCancel}>
+                Cancel Booking
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <EditBookingDialog
+        open={!!selectedBooking}
+        booking={selectedBooking}
+        onClose={() => setSelectedBooking(null)}
+      />
+    </>
   );
 };
 

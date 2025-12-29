@@ -7,6 +7,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { Calendar, Table, Plus } from "lucide-react";
 import { useBookingQuery } from "@/generated/graphql";
 import BookingTable from "./BookingTable";
+import { Loader } from "@/components";
 
 interface BookingCalendarProps {
   isBookingPanelOpen: boolean;
@@ -115,7 +116,7 @@ const BookingCalendar: React.FC<BookingCalendarProps> = ({ isBookingPanelOpen, s
 }, [data]);
 
   if (loading) {
-    return <div className="p-8 text-center text-gray-500">Loading bookings...</div>;
+    return <Loader />;
   }
 
   if (error) {
@@ -153,7 +154,7 @@ const BookingCalendar: React.FC<BookingCalendarProps> = ({ isBookingPanelOpen, s
           </div>
           <button 
             onClick={() => setIsBookingPanelOpen(true)}
-            className="flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            className="flex items-center justify-center gap-2 bg-primary-green hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
             <Plus className="w-4 h-4" />
             New Booking
           </button>

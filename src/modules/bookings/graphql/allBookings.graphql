@@ -1,12 +1,13 @@
 query booking {
   allBookings {
     nodes {
-      checkInDate
       checkOutDate
       createdAt
       status
       roomId
       userId
+       checkInDate
+      id
       updatedAt
       roomByRoomId {
         id
@@ -16,6 +17,7 @@ query booking {
         name
         id
       }
+     
     }
   }
 }

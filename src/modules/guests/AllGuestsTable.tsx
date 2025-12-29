@@ -115,7 +115,7 @@ const GuestsTable: React.FC<GuestsTableProps> = ({ showActions = true }) => {
             <div className="p-6">
               <h3 className="text-base font-medium mb-4">Booking History</h3>
               <div className="bg-white border rounded-lg overflow-hidden">
-                <BookingsTable showName={false} showActions={false} guestId = {selectedGuest.id} />
+                <BookingsTable hideGuest={true} hideActions={true} guestId = {selectedGuest.id} />
               </div>
             </div>
           </div>

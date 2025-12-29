@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Calendar, Table, Plus } from "lucide-react";
+import { X } from "lucide-react";
 import BookingCalendar from "./BookingCalander";
 import BookingTable from "./BookingTable";
 
@@ -48,21 +48,11 @@ const BookingPanel: React.FC = () => {
         {/* Panel */}
         <div className="flex min-h-full items-center justify-center p-4">
           <div className="relative bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[80vh] overflow-auto">
-            {/* Header */}
-            <div className="flex items-center justify-between bg-gradient-to-r from-teal-600 to-teal-700 px-6 py-4 rounded-t-lg sticky top-0">
-              <h2 className="text-lg font-semibold text-white">Bookings Table</h2>
-              <button
-                onClick={() => setView("calendar")}
-                className="text-white hover:bg-teal-800 p-1 rounded transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
 
             {/* Table Content */}
-            <div className="p-6">
+            {/* <div className="p-6">
               <BookingTable />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

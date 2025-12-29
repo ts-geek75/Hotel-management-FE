@@ -22,7 +22,7 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         <div>
-          <BookingsTable showActions={false} />
+          <BookingsTable hideActions={true} />
         </div>
       </div>
     </div>

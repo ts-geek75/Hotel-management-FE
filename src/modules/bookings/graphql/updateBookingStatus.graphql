@@ -1,0 +1,13 @@
+mutation UpdateBookingStatus($id: UUID!, $status: BookingStatus!) {
+  updateBookingById(
+    input: {
+      id: $id
+      bookingPatch: { status: $status }
+    }
+  ) {
+    booking {
+      id
+      status
+    }
+  }
+}

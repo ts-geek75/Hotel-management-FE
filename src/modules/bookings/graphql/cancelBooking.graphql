@@ -1,0 +1,10 @@
+mutation CancelBooking($id: UUID!) {
+  updateBookingById(
+    input: { id: $id, bookingPatch: { status: CANCELLED } }
+  ) {
+    booking {
+      id
+      status
+    }
+  }
+}
