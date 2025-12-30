@@ -11,6 +11,7 @@ import {
 } from "@/generated/graphql";
 
 type Booking = {
+  id: string;
   checkInDate: string;
   checkOutDate: string;
   createdAt: string;
@@ -73,6 +74,7 @@ export const useBookings = (): UseBookingsReturn => {
           Boolean(booking?.status)
       )
       .map((booking) => ({
+        id: booking.id, // Add booking id
         checkInDate: booking.checkInDate,
         checkOutDate: booking.checkOutDate,
         createdAt: booking.createdAt,
@@ -107,9 +109,7 @@ export const useBookings = (): UseBookingsReturn => {
     );
 
     if (conflict) {
-      toast.error(
-        "Room already booked for the selected dates"
-      );
+      toast.error("Room already booked for the selected dates");
       return;
     }
 
@@ -126,6 +126,17 @@ export const useBookings = (): UseBookingsReturn => {
   };
 
   const handleUpdateStatus = async (id: string, status: BookingStatus) => {
+    const booking = bookings.find((b) => b.id === id);
+    if (!booking) {
+      toast.error("Booking not found");
+      return;
+    }
+
+    if (booking.status === BookingStatus.CheckedOut || booking.status === BookingStatus.Cancelled ) {
+      toast.error("Cannot update a booking that has already been checked out or cancelled");
+      return;
+    }
+
     await updateStatus({
       variables: { id, status },
       refetchQueries: ["Booking"],
@@ -135,6 +146,17 @@ export const useBookings = (): UseBookingsReturn => {
   };
 
   const handleCancelBooking = async (id: string) => {
+    const booking = bookings.find((b) => b.id === id);
+    if (!booking) {
+      toast.error("Booking not found");
+      return;
+    }
+
+    if (booking.status === BookingStatus.CheckedOut) {
+      toast.error("Cannot cancel a booking that has already been checked out");
+      return;
+    }
+
     await updateStatus({
       variables: { id, status: BookingStatus.Cancelled },
       refetchQueries: ["Booking"],

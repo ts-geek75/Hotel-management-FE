@@ -1,13 +1,9 @@
 mutation UpdateBookingStatus($id: UUID!, $status: BookingStatus!) {
-  updateBookingById(
-    input: {
-      id: $id
-      bookingPatch: { status: $status }
-    }
+  updateBookingStatusWithInvoice( # Use the name from the plugin
+    id: $id
+    status: $status
   ) {
-    booking {
-      id
-      status
-    }
+    id
+    status
   }
 }

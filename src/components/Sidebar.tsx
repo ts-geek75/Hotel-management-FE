@@ -31,7 +31,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         onClick={toggleSidebar}
       />
 
-      {/* Sidebar */}
       <aside
         className={`w-64 min-h-full bg-gray-900 text-white flex flex-col transition-transform duration-300 md:translate-x-0
           ${isOpen ? "translate-x-0" : "-translate-x-full"} fixed md:static z-40 top-0 left-0`}

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components";
-import { BookingStatus } from "@/generated/graphql";
+import { BookingStatus, useBookingQuery } from "@/generated/graphql";
 import EditBookingDialog from "./components/EditBookingDialog";
 import { useBookings } from "./hooks/useBookings";
 
@@ -35,19 +35,18 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
   hideGuest = false,
   guestId,
 }) => {
-  const { bookings, loading, handleCancelBooking } = useBookings();
+  const { data, loading } = useBookingQuery();
+  const { handleCancelBooking } = useBookings(); // updated
 
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
   const [bookingToDelete, setBookingToDelete] = useState<any | null>(null);
 
   if (loading) return <Loader />;
 
-  let filteredBookings = bookings;
+  let bookings = data?.allBookings?.nodes ?? [];
 
   if (guestId) {
-    filteredBookings = filteredBookings.filter(
-      (b) => b.userId === guestId
-    );
+    bookings = bookings.filter((b) => b?.userByUserId?.id === guestId);
   }
 
   const handleConfirmCancel = () => {
@@ -74,7 +73,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredBookings.length === 0 ? (
+            {bookings.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={hideGuest ? 5 : 6}
@@ -84,10 +83,10 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                 </TableCell>
               </TableRow>
             ) : (
-              filteredBookings.map((b) => (
-                <TableRow key={b?.checkInDate + b?.roomId}>
-                  {!hideGuest && <TableCell>{b?.user?.name}</TableCell>}
-                  <TableCell>{b?.room?.roomNumber}</TableCell>
+              bookings.map((b) => (
+                <TableRow key={b?.id}>
+                  {!hideGuest && <TableCell>{b?.userByUserId?.name}</TableCell>}
+                  <TableCell>{b?.roomByRoomId?.roomNumber}</TableCell>
                   <TableCell>{b?.checkInDate}</TableCell>
                   <TableCell>{b?.checkOutDate}</TableCell>
                   <TableCell>
@@ -101,9 +100,9 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                         className="h-4 w-4 cursor-pointer"
                         onClick={() =>
                           setSelectedBooking({
-                            id: b?.roomId + b?.checkInDate,
-                            guestName: b?.user?.name,
-                            roomNumber: b?.room?.roomNumber,
+                            id: b?.id,
+                            guestName: b?.userByUserId?.name,
+                            roomNumber: b?.roomByRoomId?.roomNumber,
                             checkIn: b?.checkInDate,
                             checkOut: b?.checkOutDate,
                             status: b?.status,

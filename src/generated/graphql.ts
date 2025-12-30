@@ -26,6 +26,13 @@ export type Booking = Node & {
   checkOutDate: Scalars['Date'];
   createdAt: Scalars['Datetime'];
   id: Scalars['UUID'];
+  /** Reads a single `Invoice` that is related to this `Booking`. */
+  invoiceByBookingId?: Maybe<Invoice>;
+  /**
+   * Reads and enables pagination through a set of `Invoice`.
+   * @deprecated Please use invoiceByBookingId instead
+   */
+  invoicesByBookingId: InvoicesConnection;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   /** Reads a single `Room` that is related to this `Booking`. */
@@ -36,6 +43,17 @@ export type Booking = Node & {
   /** Reads a single `User` that is related to this `Booking`. */
   userByUserId?: Maybe<User>;
   userId: Scalars['UUID'];
+};
+
+
+export type BookingInvoicesByBookingIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<InvoiceCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InvoicesOrderBy>>;
 };
 
 /** A condition to be used against `Booking` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -171,6 +189,41 @@ export type CreateBookingPayloadBookingEdgeArgs = {
   orderBy?: InputMaybe<Array<BookingsOrderBy>>;
 };
 
+/** All input for the create `Invoice` mutation. */
+export type CreateInvoiceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Invoice` to be created by this mutation. */
+  invoice: InvoiceInput;
+};
+
+/** The output of our create `Invoice` mutation. */
+export type CreateInvoicePayload = {
+  __typename?: 'CreateInvoicePayload';
+  /** Reads a single `Booking` that is related to this `Invoice`. */
+  bookingByBookingId?: Maybe<Booking>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Invoice` that was created by this mutation. */
+  invoice?: Maybe<Invoice>;
+  /** An edge for our `Invoice`. May be used by Relay 1. */
+  invoiceEdge?: Maybe<InvoicesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `Invoice` mutation. */
+export type CreateInvoicePayloadInvoiceEdgeArgs = {
+  orderBy?: InputMaybe<Array<InvoicesOrderBy>>;
+};
+
 /** All input for the create `Room` mutation. */
 export type CreateRoomInput = {
   /**
@@ -285,6 +338,72 @@ export type DeleteBookingPayloadBookingEdgeArgs = {
   orderBy?: InputMaybe<Array<BookingsOrderBy>>;
 };
 
+/** All input for the `deleteInvoiceByBookingId` mutation. */
+export type DeleteInvoiceByBookingIdInput = {
+  bookingId: Scalars['UUID'];
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** All input for the `deleteInvoiceById` mutation. */
+export type DeleteInvoiceByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** All input for the `deleteInvoiceByInvoiceNumber` mutation. */
+export type DeleteInvoiceByInvoiceNumberInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  invoiceNumber: Scalars['String'];
+};
+
+/** All input for the `deleteInvoice` mutation. */
+export type DeleteInvoiceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Invoice` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Invoice` mutation. */
+export type DeleteInvoicePayload = {
+  __typename?: 'DeleteInvoicePayload';
+  /** Reads a single `Booking` that is related to this `Invoice`. */
+  bookingByBookingId?: Maybe<Booking>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedInvoiceId?: Maybe<Scalars['ID']>;
+  /** The `Invoice` that was deleted by this mutation. */
+  invoice?: Maybe<Invoice>;
+  /** An edge for our `Invoice`. May be used by Relay 1. */
+  invoiceEdge?: Maybe<InvoicesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `Invoice` mutation. */
+export type DeleteInvoicePayloadInvoiceEdgeArgs = {
+  orderBy?: InputMaybe<Array<InvoicesOrderBy>>;
+};
+
 /** All input for the `deleteRoomById` mutation. */
 export type DeleteRoomByIdInput = {
   /**
@@ -393,11 +512,118 @@ export type DeleteUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
+export type Invoice = Node & {
+  __typename?: 'Invoice';
+  baseAmount: Scalars['BigFloat'];
+  /** Reads a single `Booking` that is related to this `Invoice`. */
+  bookingByBookingId?: Maybe<Booking>;
+  bookingId: Scalars['UUID'];
+  createdAt: Scalars['Datetime'];
+  id: Scalars['UUID'];
+  invoiceNumber: Scalars['String'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  pdfPath: Scalars['String'];
+  taxAmount: Scalars['BigFloat'];
+  totalAmount: Scalars['BigFloat'];
+};
+
+/** A condition to be used against `Invoice` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type InvoiceCondition = {
+  /** Checks for equality with the object’s `baseAmount` field. */
+  baseAmount?: InputMaybe<Scalars['BigFloat']>;
+  /** Checks for equality with the object’s `bookingId` field. */
+  bookingId?: InputMaybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `invoiceNumber` field. */
+  invoiceNumber?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `pdfPath` field. */
+  pdfPath?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `taxAmount` field. */
+  taxAmount?: InputMaybe<Scalars['BigFloat']>;
+  /** Checks for equality with the object’s `totalAmount` field. */
+  totalAmount?: InputMaybe<Scalars['BigFloat']>;
+};
+
+/** An input for mutations affecting `Invoice` */
+export type InvoiceInput = {
+  baseAmount: Scalars['BigFloat'];
+  bookingId: Scalars['UUID'];
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  id?: InputMaybe<Scalars['UUID']>;
+  invoiceNumber: Scalars['String'];
+  pdfPath: Scalars['String'];
+  taxAmount: Scalars['BigFloat'];
+  totalAmount: Scalars['BigFloat'];
+};
+
+/** Represents an update to a `Invoice`. Fields that are set will be updated. */
+export type InvoicePatch = {
+  baseAmount?: InputMaybe<Scalars['BigFloat']>;
+  bookingId?: InputMaybe<Scalars['UUID']>;
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  id?: InputMaybe<Scalars['UUID']>;
+  invoiceNumber?: InputMaybe<Scalars['String']>;
+  pdfPath?: InputMaybe<Scalars['String']>;
+  taxAmount?: InputMaybe<Scalars['BigFloat']>;
+  totalAmount?: InputMaybe<Scalars['BigFloat']>;
+};
+
+/** A connection to a list of `Invoice` values. */
+export type InvoicesConnection = {
+  __typename?: 'InvoicesConnection';
+  /** A list of edges which contains the `Invoice` and cursor to aid in pagination. */
+  edges: Array<InvoicesEdge>;
+  /** A list of `Invoice` objects. */
+  nodes: Array<Maybe<Invoice>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Invoice` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Invoice` edge in the connection. */
+export type InvoicesEdge = {
+  __typename?: 'InvoicesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Invoice` at the end of the edge. */
+  node?: Maybe<Invoice>;
+};
+
+/** Methods to use when ordering `Invoice`. */
+export enum InvoicesOrderBy {
+  BaseAmountAsc = 'BASE_AMOUNT_ASC',
+  BaseAmountDesc = 'BASE_AMOUNT_DESC',
+  BookingIdAsc = 'BOOKING_ID_ASC',
+  BookingIdDesc = 'BOOKING_ID_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  InvoiceNumberAsc = 'INVOICE_NUMBER_ASC',
+  InvoiceNumberDesc = 'INVOICE_NUMBER_DESC',
+  Natural = 'NATURAL',
+  PdfPathAsc = 'PDF_PATH_ASC',
+  PdfPathDesc = 'PDF_PATH_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TaxAmountAsc = 'TAX_AMOUNT_ASC',
+  TaxAmountDesc = 'TAX_AMOUNT_DESC',
+  TotalAmountAsc = 'TOTAL_AMOUNT_ASC',
+  TotalAmountDesc = 'TOTAL_AMOUNT_DESC'
+}
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
   /** Creates a single `Booking`. */
   createBooking?: Maybe<CreateBookingPayload>;
+  /** Creates a single `Invoice`. */
+  createInvoice?: Maybe<CreateInvoicePayload>;
   /** Creates a single `Room`. */
   createRoom?: Maybe<CreateRoomPayload>;
   /** Creates a single `User`. */
@@ -406,6 +632,14 @@ export type Mutation = {
   deleteBooking?: Maybe<DeleteBookingPayload>;
   /** Deletes a single `Booking` using a unique key. */
   deleteBookingById?: Maybe<DeleteBookingPayload>;
+  /** Deletes a single `Invoice` using its globally unique id. */
+  deleteInvoice?: Maybe<DeleteInvoicePayload>;
+  /** Deletes a single `Invoice` using a unique key. */
+  deleteInvoiceByBookingId?: Maybe<DeleteInvoicePayload>;
+  /** Deletes a single `Invoice` using a unique key. */
+  deleteInvoiceById?: Maybe<DeleteInvoicePayload>;
+  /** Deletes a single `Invoice` using a unique key. */
+  deleteInvoiceByInvoiceNumber?: Maybe<DeleteInvoicePayload>;
   /** Deletes a single `Room` using its globally unique id. */
   deleteRoom?: Maybe<DeleteRoomPayload>;
   /** Deletes a single `Room` using a unique key. */
@@ -424,6 +658,15 @@ export type Mutation = {
   updateBooking?: Maybe<UpdateBookingPayload>;
   /** Updates a single `Booking` using a unique key and a patch. */
   updateBookingById?: Maybe<UpdateBookingPayload>;
+  updateBookingStatusWithInvoice?: Maybe<Booking>;
+  /** Updates a single `Invoice` using its globally unique id and a patch. */
+  updateInvoice?: Maybe<UpdateInvoicePayload>;
+  /** Updates a single `Invoice` using a unique key and a patch. */
+  updateInvoiceByBookingId?: Maybe<UpdateInvoicePayload>;
+  /** Updates a single `Invoice` using a unique key and a patch. */
+  updateInvoiceById?: Maybe<UpdateInvoicePayload>;
+  /** Updates a single `Invoice` using a unique key and a patch. */
+  updateInvoiceByInvoiceNumber?: Maybe<UpdateInvoicePayload>;
   /** Updates a single `Room` using its globally unique id and a patch. */
   updateRoom?: Maybe<UpdateRoomPayload>;
   /** Updates a single `Room` using a unique key and a patch. */
@@ -442,6 +685,12 @@ export type Mutation = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateBookingArgs = {
   input: CreateBookingInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateInvoiceArgs = {
+  input: CreateInvoiceInput;
 };
 
 
@@ -466,6 +715,30 @@ export type MutationDeleteBookingArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteBookingByIdArgs = {
   input: DeleteBookingByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteInvoiceArgs = {
+  input: DeleteInvoiceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteInvoiceByBookingIdArgs = {
+  input: DeleteInvoiceByBookingIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteInvoiceByIdArgs = {
+  input: DeleteInvoiceByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteInvoiceByInvoiceNumberArgs = {
+  input: DeleteInvoiceByInvoiceNumberInput;
 };
 
 
@@ -533,6 +806,37 @@ export type MutationUpdateBookingByIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateBookingStatusWithInvoiceArgs = {
+  id: Scalars['UUID'];
+  status: BookingStatus;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateInvoiceArgs = {
+  input: UpdateInvoiceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateInvoiceByBookingIdArgs = {
+  input: UpdateInvoiceByBookingIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateInvoiceByIdArgs = {
+  input: UpdateInvoiceByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateInvoiceByInvoiceNumberArgs = {
+  input: UpdateInvoiceByInvoiceNumberInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateRoomArgs = {
   input: UpdateRoomInput;
 };
@@ -591,6 +895,8 @@ export type Query = Node & {
   __typename?: 'Query';
   /** Reads and enables pagination through a set of `Booking`. */
   allBookings?: Maybe<BookingsConnection>;
+  /** Reads and enables pagination through a set of `Invoice`. */
+  allInvoices?: Maybe<InvoicesConnection>;
   /** Reads and enables pagination through a set of `Room`. */
   allRooms?: Maybe<RoomsConnection>;
   /** Reads and enables pagination through a set of `User`. */
@@ -598,6 +904,11 @@ export type Query = Node & {
   /** Reads a single `Booking` using its globally unique `ID`. */
   booking?: Maybe<Booking>;
   bookingById?: Maybe<Booking>;
+  /** Reads a single `Invoice` using its globally unique `ID`. */
+  invoice?: Maybe<Invoice>;
+  invoiceByBookingId?: Maybe<Invoice>;
+  invoiceById?: Maybe<Invoice>;
+  invoiceByInvoiceNumber?: Maybe<Invoice>;
   /** Fetches an object given its globally unique `ID`. */
   node?: Maybe<Node>;
   /** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
@@ -627,6 +938,18 @@ export type QueryAllBookingsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<BookingsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllInvoicesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<InvoiceCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InvoicesOrderBy>>;
 };
 
 
@@ -663,6 +986,30 @@ export type QueryBookingArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryBookingByIdArgs = {
   id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoiceArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoiceByBookingIdArgs = {
+  bookingId: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoiceByIdArgs = {
+  id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoiceByInvoiceNumberArgs = {
+  invoiceNumber: Scalars['String'];
 };
 
 
@@ -882,6 +1229,79 @@ export type UpdateBookingPayload = {
 /** The output of our update `Booking` mutation. */
 export type UpdateBookingPayloadBookingEdgeArgs = {
   orderBy?: InputMaybe<Array<BookingsOrderBy>>;
+};
+
+/** All input for the `updateInvoiceByBookingId` mutation. */
+export type UpdateInvoiceByBookingIdInput = {
+  bookingId: Scalars['UUID'];
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Invoice` being updated. */
+  invoicePatch: InvoicePatch;
+};
+
+/** All input for the `updateInvoiceById` mutation. */
+export type UpdateInvoiceByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+  /** An object where the defined keys will be set on the `Invoice` being updated. */
+  invoicePatch: InvoicePatch;
+};
+
+/** All input for the `updateInvoiceByInvoiceNumber` mutation. */
+export type UpdateInvoiceByInvoiceNumberInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  invoiceNumber: Scalars['String'];
+  /** An object where the defined keys will be set on the `Invoice` being updated. */
+  invoicePatch: InvoicePatch;
+};
+
+/** All input for the `updateInvoice` mutation. */
+export type UpdateInvoiceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Invoice` being updated. */
+  invoicePatch: InvoicePatch;
+  /** The globally unique `ID` which will identify a single `Invoice` to be updated. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our update `Invoice` mutation. */
+export type UpdateInvoicePayload = {
+  __typename?: 'UpdateInvoicePayload';
+  /** Reads a single `Booking` that is related to this `Invoice`. */
+  bookingByBookingId?: Maybe<Booking>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Invoice` that was updated by this mutation. */
+  invoice?: Maybe<Invoice>;
+  /** An edge for our `Invoice`. May be used by Relay 1. */
+  invoiceEdge?: Maybe<InvoicesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `Invoice` mutation. */
+export type UpdateInvoicePayloadInvoiceEdgeArgs = {
+  orderBy?: InputMaybe<Array<InvoicesOrderBy>>;
 };
 
 /** All input for the `updateRoomById` mutation. */
@@ -1153,7 +1573,7 @@ export type UpdateBookingStatusMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBookingStatusMutation = { __typename?: 'Mutation', updateBookingById?: { __typename?: 'UpdateBookingPayload', booking?: { __typename?: 'Booking', id: any, status: BookingStatus } | null } | null };
+export type UpdateBookingStatusMutation = { __typename?: 'Mutation', updateBookingStatusWithInvoice?: { __typename?: 'Booking', id: any, status: BookingStatus } | null };
 
 export type DashboardStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1397,11 +1817,9 @@ export type CreateBookingMutationResult = Apollo.MutationResult<CreateBookingMut
 export type CreateBookingMutationOptions = Apollo.BaseMutationOptions<CreateBookingMutation, CreateBookingMutationVariables>;
 export const UpdateBookingStatusDocument = gql`
     mutation UpdateBookingStatus($id: UUID!, $status: BookingStatus!) {
-  updateBookingById(input: {id: $id, bookingPatch: {status: $status}}) {
-    booking {
-      id
-      status
-    }
+  updateBookingStatusWithInvoice(id: $id, status: $status) {
+    id
+    status
   }
 }
     `;
