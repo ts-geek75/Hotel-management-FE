@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components";
-import { BookingStatus, useBookingQuery } from "@/generated/graphql";
+import { BookingStatus } from "@/generated/graphql";
 import EditBookingDialog from "./components/EditBookingDialog";
 import { useBookings } from "./hooks/useBookings";
 
@@ -35,18 +35,19 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
   hideGuest = false,
   guestId,
 }) => {
-  const { data, loading } = useBookingQuery();
-  const { handleCancelBooking } = useBookings(); // updated
+  const { bookings, loading, handleCancelBooking } = useBookings();
 
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
   const [bookingToDelete, setBookingToDelete] = useState<any | null>(null);
 
   if (loading) return <Loader />;
 
-  let bookings = data?.allBookings?.nodes ?? [];
+  let filteredBookings = bookings;
 
   if (guestId) {
-    bookings = bookings.filter((b) => b?.userByUserId?.id === guestId);
+    filteredBookings = filteredBookings.filter(
+      (b) => b.userId === guestId
+    );
   }
 
   const handleConfirmCancel = () => {
@@ -73,7 +74,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {bookings.length === 0 ? (
+            {filteredBookings.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={hideGuest ? 5 : 6}
@@ -83,10 +84,10 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                 </TableCell>
               </TableRow>
             ) : (
-              bookings.map((b) => (
-                <TableRow key={b?.id}>
-                  {!hideGuest && <TableCell>{b?.userByUserId?.name}</TableCell>}
-                  <TableCell>{b?.roomByRoomId?.roomNumber}</TableCell>
+              filteredBookings.map((b) => (
+                <TableRow key={b?.checkInDate + b?.roomId}>
+                  {!hideGuest && <TableCell>{b?.user?.name}</TableCell>}
+                  <TableCell>{b?.room?.roomNumber}</TableCell>
                   <TableCell>{b?.checkInDate}</TableCell>
                   <TableCell>{b?.checkOutDate}</TableCell>
                   <TableCell>
@@ -100,9 +101,9 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                         className="h-4 w-4 cursor-pointer"
                         onClick={() =>
                           setSelectedBooking({
-                            id: b?.id,
-                            guestName: b?.userByUserId?.name,
-                            roomNumber: b?.roomByRoomId?.roomNumber,
+                            id: b?.roomId + b?.checkInDate,
+                            guestName: b?.user?.name,
+                            roomNumber: b?.room?.roomNumber,
                             checkIn: b?.checkInDate,
                             checkOut: b?.checkOutDate,
                             status: b?.status,
